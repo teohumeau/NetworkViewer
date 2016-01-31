@@ -18,7 +18,9 @@ namespace NetworkViewer
         public Form1()
         {
             InitializeComponent();
+            this.Resize += modifierDimensions;
             button_actualiser_Click(this, null);
+            modifierDimensions(this, null);
         }
 
         private void button_actualiser_Click(object sender, EventArgs e)
@@ -63,6 +65,20 @@ namespace NetworkViewer
         private void button_quitter_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        public void modifierDimensions(object sender, System.EventArgs e)
+        {
+            tableau.AutoResizeColumns();
+            if(Size.Height<200)
+                Size = new Size(Size.Width, 200);
+            int large = tableau.RowHeadersWidth;
+            for(int x=0;x<tableau.ColumnCount;x++)
+            {
+                large += tableau.Columns[x].Width;
+            }
+            tableau.Size = new Size(large,Size.Height-50);
+            Size = new Size(tableau.Location.X + large + 20, Size.Height);
         }
     }
 }

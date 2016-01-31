@@ -135,8 +135,9 @@
             this.Controls.Add(this.button_actualiser);
             this.Controls.Add(this.tableau);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Network Viewer v1.0";
+            this.Text = "Network Viewer v1.1";
             ((System.ComponentModel.ISupportInitialize)(this.tableau)).EndInit();
             this.ResumeLayout(false);
 
