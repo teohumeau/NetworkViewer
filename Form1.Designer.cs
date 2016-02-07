@@ -216,11 +216,11 @@
             this.Controls.Add(this.button_quitter);
             this.Controls.Add(this.button_actualiser);
             this.Controls.Add(this.dataGridView_interfaces);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(1575, 540);
             this.Name = "Form1";
-            this.Text = "Network Viewer v1.2";
+            this.Text = "Network Viewer ";
+            this.Resize += new System.EventHandler(this.modifierDimensions);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_interfaces)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_netview)).EndInit();
             this.ResumeLayout(false);

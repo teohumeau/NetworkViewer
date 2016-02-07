@@ -16,12 +16,18 @@ namespace NetworkViewer
     public partial class Form1 : Form
     {
         bool local = false;
+        List<Ping> pinger;
+        List<IPAddress> address;
 
         public Form1()
         {
+            pinger = new List<Ping>();
+            address = new List<IPAddress>();
             InitializeComponent();
+            Text = ProductName + " " + ProductVersion;
             button_mode_Click(this, null);
             button_actualiser_Click(this, null);
+            modifierDimensions(this, null);
         }
 
         private void button_actualiser_Click(object sender, EventArgs e)
@@ -43,8 +49,12 @@ namespace NetworkViewer
                 for (int x = 0; x < adapters.Length; x++)
                 {
                     if (adapters[x].OperationalStatus == OperationalStatus.Up 
-                        && adapters[x].NetworkInterfaceType != NetworkInterfaceType.Loopback
-                        && adapters[x].NetworkInterfaceType != NetworkInterfaceType.Tunnel)
+                        && (adapters[x].NetworkInterfaceType == NetworkInterfaceType.Wireless80211
+                        || adapters[x].NetworkInterfaceType == NetworkInterfaceType.Ethernet
+                        || adapters[x].NetworkInterfaceType == NetworkInterfaceType.Ethernet3Megabit
+                        || adapters[x].NetworkInterfaceType == NetworkInterfaceType.FastEthernetFx
+                        || adapters[x].NetworkInterfaceType == NetworkInterfaceType.FastEthernetT
+                        || adapters[x].NetworkInterfaceType == NetworkInterfaceType.GigabitEthernet))
                     {
                         affichage.Add(x);
                     }
@@ -74,11 +84,45 @@ namespace NetworkViewer
                         }
                     }
                 }
-                modifierDimensions();
             }
             else
             {
-                
+                //Vidage du tableau
+                while (dataGridView_netview.RowCount > 0)
+                    dataGridView_netview.Rows.RemoveAt(0);
+                pinger.Clear();
+                address.Clear();
+                IPAddress adresse = IPAddress.Parse(label_adresseIP.Text);
+                for (int x = 0; x < 255; x++)
+                {
+                    if (x > 0)
+                    {
+                        adresse = IPIncrement(adresse);
+                    }
+                    address.Add(adresse);
+                    pinger.Add(new Ping());
+                    pinger.Last().PingCompleted += Pinger_PingCompleted;
+                    pinger.Last().SendPingAsync(adresse);
+                }
+            }
+        }
+
+        private void Pinger_PingCompleted(object sender, PingCompletedEventArgs e)
+        {
+            int x = pinger.IndexOf((Ping)sender);
+            if (e.Reply.Status == IPStatus.Success)
+            {
+                dataGridView_netview.Rows.Add();
+                try
+                {
+                    dataGridView_netview.Rows[dataGridView_netview.RowCount - 1].Cells[0].Value = Dns.GetHostEntry(address[x]).HostName;
+                }
+                catch(SocketException)
+                {
+                    dataGridView_netview.Rows[dataGridView_netview.RowCount - 1].Cells[0].Value = "Inconnu";
+                }
+                dataGridView_netview.Rows[dataGridView_netview.RowCount - 1].Cells[1].Value = address[x].ToString();
+                dataGridView_netview.Rows[dataGridView_netview.RowCount - 1].Cells[2].Value = e.Reply.RoundtripTime.ToString() + "ms";
             }
         }
 
@@ -87,23 +131,23 @@ namespace NetworkViewer
             Close();
         }
 
-        public void modifierDimensions()
+        public void modifierDimensions(object sender, EventArgs e)
         {
-            dataGridView_interfaces.AutoResizeColumns();
-            if(Size.Height<200)
-                Size = new Size(Size.Width, 200);
-            int large = 0;
-            for(int x=0;x<dataGridView_interfaces.ColumnCount;x++)
+            dataGridView_interfaces.Size = new Size(Size.Width - 75, Size.Height - 50);
+            dataGridView_netview.Size = new Size(Size.Width - 75, Size.Height - 75);
+            dataGridView_interfaces.Columns[0].Width = dataGridView_interfaces.Width / 5;
+            dataGridView_interfaces.Columns[1].Width = dataGridView_interfaces.Width / 3;
+            for(int x=2;x<5;x++)
+                dataGridView_interfaces.Columns[x].Width = dataGridView_interfaces.Width / 7;
+            for (int x = 0; x < dataGridView_netview.Columns.Count; x++)
             {
-                large += dataGridView_interfaces.Columns[x].Width;
+                dataGridView_netview.Columns[x].Width = (dataGridView_netview.Width / dataGridView_netview.Columns.Count) - 1;
             }
-            dataGridView_interfaces.Size = new Size(large, Size.Height - 50);
-            dataGridView_netview.Size = new Size(large, Size.Height - 75);
-            Size = new Size(dataGridView_interfaces.Location.X + large + 20, Size.Height);
         }
 
         private void button_mode_Click(object sender, EventArgs e)
         {
+            button_actualiser.Enabled = true;
             local = !local;
             if (local)
             {
@@ -126,7 +170,6 @@ namespace NetworkViewer
             comboBox_interfaces.Visible = !local;
             label_adresseIP.Visible = !local;
             dataGridView_netview.Visible = !local;
-            button_actualiser.PerformClick();
         }
 
         private void comboBox_interfaces_SelectedIndexChanged(object sender, EventArgs e)
@@ -134,11 +177,38 @@ namespace NetworkViewer
             label_adresseIP.Text = "";
             if (comboBox_interfaces.SelectedIndex >= 0)
             {
-                if (dataGridView_interfaces.Rows[comboBox_interfaces.SelectedIndex].Cells[2].Value.ToString() != "")
+                if (dataGridView_interfaces.Rows[comboBox_interfaces.SelectedIndex].Cells[3].Value.ToString() != "N/A")
                 {
-                    label_adresseIP.Text = dataGridView_interfaces.Rows[comboBox_interfaces.SelectedIndex].Cells[2].Value.ToString();
+                    label_adresseIP.Text = dataGridView_interfaces.Rows[comboBox_interfaces.SelectedIndex].Cells[3].Value.ToString();
+                    button_actualiser.Enabled = true;
+                }
+                else
+                {
+                    label_adresseIP.Text = "Recherche impossible";
+                    button_actualiser.Enabled = false;
                 }
             }
+        }
+
+        private IPAddress IPIncrement(IPAddress add)
+        {
+            byte[] bytes = add.GetAddressBytes();
+            IPAddress result;
+
+            for (int y = bytes.Length - 1; y >= 0; y--)
+            {
+                if (bytes[y] == byte.MaxValue)
+                {
+                    bytes[y] = 0;
+                    continue;
+                }
+
+                bytes[y]++;
+
+                result = new IPAddress(bytes);
+                return result;
+            }
+            return add;
         }
     }
 }
