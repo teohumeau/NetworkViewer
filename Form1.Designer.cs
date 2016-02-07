@@ -29,39 +29,48 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.tableau = new System.Windows.Forms.DataGridView();
+            this.dataGridView_interfaces = new System.Windows.Forms.DataGridView();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Interface = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IPv4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Passerelle = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Masque = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button_mode = new System.Windows.Forms.Button();
             this.button_quitter = new System.Windows.Forms.Button();
             this.button_actualiser = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.tableau)).BeginInit();
+            this.comboBox_interfaces = new System.Windows.Forms.ComboBox();
+            this.dataGridView_netview = new System.Windows.Forms.DataGridView();
+            this.Nom = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AdresseIP = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Ping = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label_adresseIP = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_interfaces)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_netview)).BeginInit();
             this.SuspendLayout();
             // 
-            // tableau
+            // dataGridView_interfaces
             // 
-            this.tableau.AllowUserToAddRows = false;
-            this.tableau.AllowUserToDeleteRows = false;
-            this.tableau.AllowUserToResizeColumns = false;
-            this.tableau.AllowUserToResizeRows = false;
-            this.tableau.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.tableau.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridView_interfaces.AllowUserToAddRows = false;
+            this.dataGridView_interfaces.AllowUserToDeleteRows = false;
+            this.dataGridView_interfaces.AllowUserToResizeColumns = false;
+            this.dataGridView_interfaces.AllowUserToResizeRows = false;
+            this.dataGridView_interfaces.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_interfaces.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Type,
             this.Interface,
             this.IPv4,
             this.Passerelle,
             this.Masque});
-            this.tableau.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.tableau.Location = new System.Drawing.Point(109, 12);
-            this.tableau.MultiSelect = false;
-            this.tableau.Name = "tableau";
-            this.tableau.ReadOnly = true;
-            this.tableau.RowTemplate.Height = 33;
-            this.tableau.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.tableau.Size = new System.Drawing.Size(1428, 445);
-            this.tableau.TabIndex = 0;
+            this.dataGridView_interfaces.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dataGridView_interfaces.Location = new System.Drawing.Point(109, 12);
+            this.dataGridView_interfaces.MultiSelect = false;
+            this.dataGridView_interfaces.Name = "dataGridView_interfaces";
+            this.dataGridView_interfaces.ReadOnly = true;
+            this.dataGridView_interfaces.RowHeadersVisible = false;
+            this.dataGridView_interfaces.RowTemplate.Height = 33;
+            this.dataGridView_interfaces.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dataGridView_interfaces.Size = new System.Drawing.Size(1428, 445);
+            this.dataGridView_interfaces.TabIndex = 0;
             // 
             // Type
             // 
@@ -104,11 +113,22 @@
             this.Masque.ReadOnly = true;
             this.Masque.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
+            // button_mode
+            // 
+            this.button_mode.BackgroundImage = global::NetworkViewer.Properties.Resources.Réseau;
+            this.button_mode.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button_mode.Location = new System.Drawing.Point(13, 109);
+            this.button_mode.Name = "button_mode";
+            this.button_mode.Size = new System.Drawing.Size(90, 90);
+            this.button_mode.TabIndex = 3;
+            this.button_mode.UseVisualStyleBackColor = true;
+            this.button_mode.Click += new System.EventHandler(this.button_mode_Click);
+            // 
             // button_quitter
             // 
             this.button_quitter.BackgroundImage = global::NetworkViewer.Properties.Resources.Annuler;
             this.button_quitter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button_quitter.Location = new System.Drawing.Point(13, 110);
+            this.button_quitter.Location = new System.Drawing.Point(13, 205);
             this.button_quitter.Name = "button_quitter";
             this.button_quitter.Size = new System.Drawing.Size(90, 90);
             this.button_quitter.TabIndex = 2;
@@ -126,26 +146,91 @@
             this.button_actualiser.UseVisualStyleBackColor = true;
             this.button_actualiser.Click += new System.EventHandler(this.button_actualiser_Click);
             // 
+            // comboBox_interfaces
+            // 
+            this.comboBox_interfaces.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_interfaces.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBox_interfaces.FormattingEnabled = true;
+            this.comboBox_interfaces.Location = new System.Drawing.Point(110, 12);
+            this.comboBox_interfaces.Name = "comboBox_interfaces";
+            this.comboBox_interfaces.Size = new System.Drawing.Size(673, 45);
+            this.comboBox_interfaces.TabIndex = 4;
+            this.comboBox_interfaces.SelectedIndexChanged += new System.EventHandler(this.comboBox_interfaces_SelectedIndexChanged);
+            // 
+            // dataGridView_netview
+            // 
+            this.dataGridView_netview.AllowUserToAddRows = false;
+            this.dataGridView_netview.AllowUserToDeleteRows = false;
+            this.dataGridView_netview.AllowUserToResizeColumns = false;
+            this.dataGridView_netview.AllowUserToResizeRows = false;
+            this.dataGridView_netview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_netview.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Nom,
+            this.AdresseIP,
+            this.Ping});
+            this.dataGridView_netview.Location = new System.Drawing.Point(110, 63);
+            this.dataGridView_netview.MultiSelect = false;
+            this.dataGridView_netview.Name = "dataGridView_netview";
+            this.dataGridView_netview.ReadOnly = true;
+            this.dataGridView_netview.RowHeadersVisible = false;
+            this.dataGridView_netview.RowTemplate.Height = 33;
+            this.dataGridView_netview.Size = new System.Drawing.Size(1427, 394);
+            this.dataGridView_netview.TabIndex = 5;
+            // 
+            // Nom
+            // 
+            this.Nom.HeaderText = "Nom";
+            this.Nom.Name = "Nom";
+            this.Nom.ReadOnly = true;
+            // 
+            // AdresseIP
+            // 
+            this.AdresseIP.HeaderText = "Adresse IP";
+            this.AdresseIP.Name = "AdresseIP";
+            this.AdresseIP.ReadOnly = true;
+            // 
+            // Ping
+            // 
+            this.Ping.HeaderText = "Ping";
+            this.Ping.Name = "Ping";
+            this.Ping.ReadOnly = true;
+            // 
+            // label_adresseIP
+            // 
+            this.label_adresseIP.AutoSize = true;
+            this.label_adresseIP.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_adresseIP.Location = new System.Drawing.Point(790, 12);
+            this.label_adresseIP.Name = "label_adresseIP";
+            this.label_adresseIP.Size = new System.Drawing.Size(0, 44);
+            this.label_adresseIP.TabIndex = 6;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1549, 469);
+            this.Controls.Add(this.label_adresseIP);
+            this.Controls.Add(this.dataGridView_netview);
+            this.Controls.Add(this.comboBox_interfaces);
+            this.Controls.Add(this.button_mode);
             this.Controls.Add(this.button_quitter);
             this.Controls.Add(this.button_actualiser);
-            this.Controls.Add(this.tableau);
+            this.Controls.Add(this.dataGridView_interfaces);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Network Viewer v1.1";
-            ((System.ComponentModel.ISupportInitialize)(this.tableau)).EndInit();
+            this.Text = "Network Viewer v1.2";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_interfaces)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_netview)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView tableau;
+        private System.Windows.Forms.DataGridView dataGridView_interfaces;
         private System.Windows.Forms.Button button_actualiser;
         private System.Windows.Forms.Button button_quitter;
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
@@ -153,6 +238,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn IPv4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Passerelle;
         private System.Windows.Forms.DataGridViewTextBoxColumn Masque;
+        private System.Windows.Forms.Button button_mode;
+        private System.Windows.Forms.ComboBox comboBox_interfaces;
+        private System.Windows.Forms.DataGridView dataGridView_netview;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Nom;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AdresseIP;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Ping;
+        private System.Windows.Forms.Label label_adresseIP;
     }
 }
 
