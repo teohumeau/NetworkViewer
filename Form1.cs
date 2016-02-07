@@ -141,7 +141,7 @@ namespace NetworkViewer
                 dataGridView_interfaces.Columns[x].Width = dataGridView_interfaces.Width / 7;
             for (int x = 0; x < dataGridView_netview.Columns.Count; x++)
             {
-                dataGridView_netview.Columns[x].Width = (dataGridView_netview.Width / dataGridView_netview.Columns.Count) - 1;
+                dataGridView_netview.Columns[x].Width = (dataGridView_netview.Width / dataGridView_netview.Columns.Count) - 5;
             }
         }
 
