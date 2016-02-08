@@ -93,7 +93,15 @@ namespace NetworkViewer
                 pinger.Clear();
                 address.Clear();
                 IPAddress adresse = IPAddress.Parse(label_adresseIP.Text);
-                for (int x = 0; x < 255; x++)
+                IPAddress masque = IPAddress.Parse(dataGridView_interfaces.Rows[comboBox_interfaces.SelectedIndex].Cells[4].Value.ToString());
+                byte[] calc = masque.GetAddressBytes();
+                int numberOfPossibilities = 1;
+                for (int x = calc.Length-1; x > 0; x--)
+                {
+                    if(calc[x]!=255)
+                        numberOfPossibilities *= (255 - calc[x]);
+                }
+                for (int x = 0; x < numberOfPossibilities; x++)
                 {
                     if (x > 0)
                     {
