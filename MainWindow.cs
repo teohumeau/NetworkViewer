@@ -27,7 +27,13 @@ namespace NetworkViewer
         {
             if (ComboBox_Interfaces.SelectedIndex > -1)
             {
-                Label_AdresseIP.Text = dataGridView_interfaces.Rows[ComboBox_Interfaces.SelectedIndex].Cells[2].Value.ToString();
+                foreach(DataGridViewRow label in dataGridView_interfaces.Rows)
+				{
+                    if (label.Cells[1].Value.ToString() == ComboBox_Interfaces.SelectedItem.ToString())
+					{
+                        Label_AdresseIP.Text = label.Cells[2].Value.ToString();
+                    }
+				}
             }
         }
 
