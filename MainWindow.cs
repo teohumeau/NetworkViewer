@@ -1,11 +1,12 @@
+using NetworkViewer.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace NetworkViewer
 {
@@ -27,20 +28,20 @@ namespace NetworkViewer
         {
             if (ComboBox_Interfaces.SelectedIndex > -1)
             {
-                foreach(DataGridViewRow label in dataGridView_interfaces.Rows)
-				{
+                foreach (DataGridViewRow label in dataGridView_interfaces.Rows)
+                {
                     if (label.Cells[1].Value.ToString() == ComboBox_Interfaces.SelectedItem.ToString())
-					{
+                    {
                         Label_AdresseIP.Text = label.Cells[2].Value.ToString();
                     }
-				}
+                }
             }
         }
 
         private void BackgroundWorker_Ping_DoWork(object sender, DoWorkEventArgs e)
         {
             int i = 0;
-            while(i < ips.Count)
+            while (i < ips.Count)
             {
                 pinger.Add(new Ping());
                 pinger.Last().PingCompleted += Pinger_PingCompleted;
@@ -52,7 +53,8 @@ namespace NetworkViewer
         {
             if (e.Reply.Status == IPStatus.Success)
             {
-                dataGridView_netview.Invoke((MethodInvoker)delegate {
+                dataGridView_netview.Invoke((MethodInvoker)delegate
+                {
                     dataGridView_netview.Rows.Add();
                     try
                     {
@@ -64,14 +66,16 @@ namespace NetworkViewer
                     }
                     dataGridView_netview.Rows[dataGridView_netview.RowCount - 1].Cells[1].Value = e.Reply.Address.ToString();
                     dataGridView_netview.Rows[dataGridView_netview.RowCount - 1].Cells[2].Value = e.Reply.RoundtripTime.ToString() + "ms";
+                    dataGridView_netview.Rows[dataGridView_netview.RowCount - 1].Cells[3].Value = IPtoMACHelper.getMacByIp(e.Reply.Address.ToString());
                 });
             }
 
             pinger[pinger.IndexOf((Ping)sender)] = null;
 
-            progressBar_inResearch.Invoke((MethodInvoker)delegate {
+            progressBar_inResearch.Invoke((MethodInvoker)delegate
+            {
                 progressBar_inResearch.PerformStep();
-                
+
                 if (progressBar_inResearch.Value == progressBar_inResearch.Maximum)
                 {
                     progressBar_inResearch.Visible = false;
@@ -160,7 +164,7 @@ namespace NetworkViewer
 
             //Création de la liste des adresses à scanner
             pinger = new List<Ping>();
-            IPNetwork ipn = IPNetwork.Parse(Label_AdresseIP.Text, dataGridView_interfaces.Rows[ComboBox_Interfaces.SelectedIndex].Cells[4].Value.ToString());
+            IPNetwork2 ipn = IPNetwork2.Parse(Label_AdresseIP.Text, dataGridView_interfaces.Rows[ComboBox_Interfaces.SelectedIndex].Cells[4].Value.ToString());
             ips = ipn.ListIPAddress();
 
             //Lancement de la recherche
@@ -198,13 +202,16 @@ namespace NetworkViewer
             }
             else
             {
-                Button_StartRealTime.Invoke((MethodInvoker)delegate {
+                Button_StartRealTime.Invoke((MethodInvoker)delegate
+                {
                     Button_StartRealTime.Enabled = true;
                 });
-                Button_StopRealTime.Invoke((MethodInvoker)delegate {
+                Button_StopRealTime.Invoke((MethodInvoker)delegate
+                {
                     Button_StopRealTime.Enabled = false;
                 });
-                TextBox_AddressToWatch.Invoke((MethodInvoker)delegate {
+                TextBox_AddressToWatch.Invoke((MethodInvoker)delegate
+                {
                     TextBox_AddressToWatch.Enabled = true;
                 });
             }
@@ -219,19 +226,23 @@ namespace NetworkViewer
         {
             if (e.Reply.Status == IPStatus.Success)
             {
-                Chart_RealTime.Invoke((MethodInvoker)delegate {
+                Chart_RealTime.Invoke((MethodInvoker)delegate
+                {
                     Chart_RealTime.Series.First().Points.AddY(e.Reply.RoundtripTime);
                 });
-                ListBox_RealTime.Invoke((MethodInvoker)delegate {
+                ListBox_RealTime.Invoke((MethodInvoker)delegate
+                {
                     ListBox_RealTime.Items.Insert(0, e.Reply.RoundtripTime.ToString() + "ms");
                 });
             }
             else
             {
-                Chart_RealTime.Invoke((MethodInvoker)delegate {
+                Chart_RealTime.Invoke((MethodInvoker)delegate
+                {
                     Chart_RealTime.Series.First().Points.AddY(0);
                 });
-                ListBox_RealTime.Invoke((MethodInvoker)delegate {
+                ListBox_RealTime.Invoke((MethodInvoker)delegate
+                {
                     ListBox_RealTime.Items.Insert(0, e.Reply.Status.ToString());
                 });
             }
